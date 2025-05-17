@@ -21,6 +21,36 @@
             <input type="number" step="0.01" name="preco" class="form-control" value="<?= $produto->preco ?>" required>
         </div>
 
+        <h4 class="mt-5">Variações</h4>
+        <?php if (empty($variacoes)): ?>
+            <p class="text-muted">Nenhuma variação cadastrada.</p>
+        <?php else: ?>
+            <?php foreach ($variacoes as $v): ?>
+                <div class="row mb-2 align-items-center">
+                    <div class="col-md-5">
+                        <input type="text" class="form-control" name="variacoes[<?= $v->id ?>][nome]" value="<?= htmlspecialchars($v->nome) ?>" placeholder="Nome da variação">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" class="form-control" name="variacoes[<?= $v->id ?>][quantidade]" value="<?= $v->quantidade ?>" placeholder="Quantidade em estoque">
+                    </div>
+                    <div class="col-md-2">
+                        <a href="/?rota=variacao/excluir&id=<?= $v->id ?>&produto_id=<?= $produto->id ?>" class="btn btn-sm btn-danger"
+                           onclick="return confirm('Excluir essa variação?')">🗑️</a>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+
+        <h5 class="mt-4">Nova variação</h5>
+        <div class="row mb-4">
+            <div class="col-md-5">
+                <input type="text" class="form-control" name="nova_variacao[nome]" placeholder="Nome da nova variação">
+            </div>
+            <div class="col-md-3">
+                <input type="number" class="form-control" name="nova_variacao[quantidade]" placeholder="Quantidade em estoque">
+            </div>
+        </div>
+
         <button type="submit" class="btn btn-success">Salvar Alterações</button>
         <a href="/?rota=produto/listar" class="btn btn-secondary">Cancelar</a>
     </form>

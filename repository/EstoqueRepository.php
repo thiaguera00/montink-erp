@@ -1,5 +1,5 @@
 <?php
-require_once '../models/Estoque.php';
+require_once __DIR__ . '/../models/Estoque.php';
 
 class EstoqueRepository {
     private PDO $db;

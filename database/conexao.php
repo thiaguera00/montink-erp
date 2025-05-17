@@ -10,7 +10,6 @@ class Conexao
 
     public static function conectar()
     {
-        // Carrega as variáveis do .env
         require_once __DIR__ . '/../utils/env.php';
 
         self::$host = $_ENV['DB_HOST'];

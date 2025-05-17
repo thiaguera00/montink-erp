@@ -1,6 +1,6 @@
 <?php
 
-require_once '../models/Variacao.php';
+require_once __DIR__ .  '/../models/Variacao.php';
 
 class VariacaoRepository {
     private PDO $db;
@@ -24,20 +24,29 @@ class VariacaoRepository {
     }
 
     public function listarPorProduto(int $produtoId): array {
-        $stmt = $this->db->prepare("SELECT * FROM variacoes WHERE produto_id = ?");
-        $stmt->execute([$produtoId]);
+    $stmt = $this->db->prepare("
+        SELECT v.id, v.produto_id, v.nome, e.quantidade
+        FROM variacoes v
+        LEFT JOIN estoque e ON e.variacao_id = v.id
+        WHERE v.produto_id = ?
+    ");
+    $stmt->execute([$produtoId]);
 
-        $variacoes = [];
-        while ($row = $stmt->fetch()) {
-            $variacoes[] = new Variacao(
-                $row['produto_id'],
-                $row['nome'],
-                $row['id']
-            );
-        }
+    $variacoes = [];
+    while ($row = $stmt->fetch()) {
+        $variacao = new Variacao(
+            $row['produto_id'],
+            $row['nome'],
+            $row['id']
+        );
 
-        return $variacoes;
+        $variacao->quantidade = $row['quantidade'] ?? 0;
+
+        $variacoes[] = $variacao;
     }
+
+    return $variacoes;
+}
 
     public function deletarPorProduto(int $produtoId): bool {
         $stmt = $this->db->prepare("DELETE FROM variacoes WHERE produto_id = ?");
@@ -55,4 +64,12 @@ class VariacaoRepository {
 
         return null;
     }
+
+    public function atualizar(Variacao $variacao): bool {
+    $stmt = $this->db->prepare("UPDATE variacoes SET nome = ? WHERE id = ?");
+    return $stmt->execute([
+        $variacao->nome,
+        $variacao->id
+    ]);
+}
 }

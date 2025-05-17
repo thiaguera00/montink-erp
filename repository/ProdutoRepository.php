@@ -64,4 +64,49 @@ class ProdutoRepository {
         $stmt = $this->db->prepare("DELETE FROM produtos WHERE id = ?");
         return $stmt->execute([$id]);
     }
+
+    public function listarComVariações(): array {
+        $sql = "
+            SELECT 
+                p.id AS produto_id,
+                p.nome AS produto_nome,
+                p.preco,
+                v.id AS variacao_id,
+                v.nome AS variacao_nome,
+                e.quantidade
+            FROM produtos p
+            LEFT JOIN variacoes v ON v.produto_id = p.id
+            LEFT JOIN estoque e on e.variacao_id = v.id
+            ORDER BY p.id DESC
+        ";
+
+        $stmt = $this->db->query($sql);
+        $resultados = $stmt->fetchAll();
+
+        $produtos = [];
+
+        foreach ($resultados as $row) {
+            $pid = $row['produto_id'];
+
+            if (!isset($produtos[$pid])) {
+                $produtos[$pid] = [
+                    'id' => $pid,
+                    'nome' => $row['produto_nome'],
+                    'preco' => $row['preco'],
+                    'variacoes' => []
+                ];
+            }
+
+           if ($row['variacao_id']) {
+                $produtos[$pid]['variacoes'][] = [
+                    'id' => $row['variacao_id'],
+                    'nome' => $row['variacao_nome'],
+                    'quantidade' => $row['quantidade'] ?? 0
+                ];
+            }
+        }
+
+        return array_values($produtos);
+    }
+
 }
