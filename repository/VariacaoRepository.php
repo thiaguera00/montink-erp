@@ -24,30 +24,30 @@ class VariacaoRepository {
     }
 
     public function listarPorProduto(int $produtoId): array {
-    $stmt = $this->db->prepare("
-        SELECT v.id, v.produto_id, v.nome, e.quantidade
-        FROM variacoes v
-        LEFT JOIN estoque e ON e.variacao_id = v.id
-        WHERE v.produto_id = ?
-    ");
-    $stmt->execute([$produtoId]);
+        $stmt = $this->db->prepare("
+            SELECT v.id, v.produto_id, v.nome, e.quantidade
+            FROM variacoes v
+            LEFT JOIN estoque e ON e.variacao_id = v.id
+            WHERE v.produto_id = ?
+        ");
+        $stmt->execute([$produtoId]);
 
-    $variacoes = [];
+        $variacoes = [];
 
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $v = new Variacao(
-            $row['produto_id'],
-            $row['nome'],
-            (int)$row['id']
-        );
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $v = new Variacao(
+                $row['produto_id'],
+                $row['nome'],
+                (int)$row['id']
+            );
 
-        $v->quantidade = (int)($row['quantidade'] ?? 0);
+            $v->quantidade = (int)($row['quantidade'] ?? 0);
 
-        $variacoes[] = $v;
+            $variacoes[] = $v;
+        }
+
+        return $variacoes;
     }
-
-    return $variacoes;
-}
 
     public function deletarPorProduto(int $produtoId): bool {
         $stmt = $this->db->prepare("DELETE FROM variacoes WHERE produto_id = ?");
