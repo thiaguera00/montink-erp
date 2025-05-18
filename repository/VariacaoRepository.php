@@ -33,16 +33,17 @@ class VariacaoRepository {
     $stmt->execute([$produtoId]);
 
     $variacoes = [];
-    while ($row = $stmt->fetch()) {
-        $variacao = new Variacao(
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $v = new Variacao(
             $row['produto_id'],
             $row['nome'],
-            $row['id']
+            (int)$row['id']
         );
 
-        $variacao->quantidade = $row['quantidade'] ?? 0;
+        $v->quantidade = (int)($row['quantidade'] ?? 0);
 
-        $variacoes[] = $variacao;
+        $variacoes[] = $v;
     }
 
     return $variacoes;
@@ -66,10 +67,10 @@ class VariacaoRepository {
     }
 
     public function atualizar(Variacao $variacao): bool {
-    $stmt = $this->db->prepare("UPDATE variacoes SET nome = ? WHERE id = ?");
-    return $stmt->execute([
-        $variacao->nome,
-        $variacao->id
-    ]);
-}
+        $stmt = $this->db->prepare("UPDATE variacoes SET nome = ? WHERE id = ?");
+        return $stmt->execute([
+            $variacao->nome,
+            $variacao->id
+        ]);
+    }
 }

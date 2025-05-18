@@ -40,11 +40,17 @@
                         <?php if (empty($p['variacoes'])): ?>
                             <span class="text-muted">Nenhuma</span>
                         <?php else: ?>
-                            <?php foreach ($p['variacoes'] as $v): ?>
-                                <span class="badge bg-secondary me-1">
-                                    <?= htmlspecialchars($v['nome']) ?> 
-                                    (<?= $v['quantidade'] ?>)
-                                </span>
+                           <?php foreach ($p['variacoes'] as $v): ?>
+                                <div class="d-inline-block me-2">
+                                    <span class="badge bg-secondary">
+                                        <?= htmlspecialchars($v['nome']) ?> (<?= $v['quantidade'] ?>)
+                                    </span>
+
+                                    <?php if ($v['quantidade'] > 0): ?>
+                                        <a href="/?rota=carrinho/adicionar&variacao_id=<?= $v['id'] ?>" 
+                                        class="btn btn-sm btn-success">Comprar</a>
+                                    <?php endif; ?>
+                                </div>
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </td>

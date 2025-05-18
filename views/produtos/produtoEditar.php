@@ -28,14 +28,21 @@
             <?php foreach ($variacoes as $v): ?>
                 <div class="row mb-2 align-items-center">
                     <div class="col-md-5">
-                        <input type="text" class="form-control" name="variacoes[<?= $v->id ?>][nome]" value="<?= htmlspecialchars($v->nome) ?>" placeholder="Nome da variação">
+                        <input type="text" class="form-control"
+                            name="variacoes[<?= $v->id ?>][nome]"
+                            value="<?= htmlspecialchars($v->nome) ?>"
+                            placeholder="Nome da variação">
                     </div>
                     <div class="col-md-3">
-                        <input type="number" class="form-control" name="variacoes[<?= $v->id ?>][quantidade]" value="<?= $v->quantidade ?>" placeholder="Quantidade em estoque">
+                        <input type="number" class="form-control"
+                            name="variacoes[<?= $v->id ?>][quantidade]"
+                            value="<?= $v->quantidade ?>"
+                            placeholder="Quantidade em estoque">
                     </div>
                     <div class="col-md-2">
-                        <a href="/?rota=variacao/excluir&id=<?= $v->id ?>&produto_id=<?= $produto->id ?>" class="btn btn-sm btn-danger"
-                           onclick="return confirm('Excluir essa variação?')">🗑️</a>
+                        <a href="/?rota=variacao/excluir&id=<?= $v->id ?>&produto_id=<?= $produto->id ?>"
+                        class="btn btn-sm btn-danger"
+                        onclick="return confirm('Excluir essa variação?')">🗑️</a>
                     </div>
                 </div>
             <?php endforeach; ?>

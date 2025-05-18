@@ -36,11 +36,11 @@ class ProdutoController {
         $produto = $this->produtoRepo->buscarPorId($id);
         $variacoes = $this->variacaoRepo->listarPorProduto($id);
 
-        foreach ($variacoes as &$v) {
+        foreach ($variacoes as $v) {
             $estoque = $this->estoqueRepo->buscarPorVariacao($v->id);
             $v->quantidade = $estoque ? $estoque->quantidade : 0;
         }
-
+    
         require __DIR__ . '/../views/produtos/produtoEditar.php';
     }
 
@@ -51,12 +51,17 @@ class ProdutoController {
             new DateTime(),
             (int)$dados['id']
         );
+
         $this->produtoRepo->atualizar($produto);
 
         if (isset($dados['variacoes']) && is_array($dados['variacoes'])) {
             foreach ($dados['variacoes'] as $id => $v) {
                 $variacao = new Variacao($produto->id, $v['nome'], (int)$id);
-                $this->variacaoRepo->atualizar($variacao);
+
+                $result = $this->variacaoRepo->atualizar($variacao);
+                if (!$result) {
+                    die( "Erro ao atualizar variação ID {$variacao->id}");
+                }
                 $this->estoqueRepo->atualizarQuantidade($variacao->id, (int)$v['quantidade']);
             }
         }
