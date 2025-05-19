@@ -141,6 +141,19 @@ switch ($rota) {
     case 'pedido/confirmado':
         $pedidoController->confirmado();
     break;
+    
+    //Cupom
+    case 'cupom/form':
+        $cupomController->form();
+    break;
+
+    case 'cupom/salvar':
+        $cupomController->salvarViaPost($_POST);
+    break;
+
+    case 'cupom/listar':
+        $cupomController->listar();
+    break;
 
     default:
         http_response_code(404);

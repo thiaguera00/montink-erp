@@ -18,6 +18,27 @@ class CupomController {
         $this->produtoRepo = $produtoRepo;
     }
 
+    public function form(): void {
+        require __DIR__ . '/../views/cupons/cupomForm.php';
+    }
+
+    public function salvarViaPost(array $data): void {
+        $cupom = new Cupom(
+            $data['codigo'],
+            (float)$data['desconto_percentual'],
+            (float)$data['valor_minimo'],
+            new DateTime($data['validade'])
+        );
+
+        $this->cupomRepo->salvar($cupom);
+        header("Location: /?rota=cupom/listar");
+    }
+
+    public function listar(): void {
+        $cupons = $this->cupomRepo->buscarTodos();
+        require __DIR__ . '/../views/cupons/cupomListar.php';
+    }
+
     public function aplicarCupom(string $codigo): void {
         session_start();
 
@@ -29,7 +50,6 @@ class CupomController {
             exit;
         }
 
-        // Recalcular o total do carrinho
         $total = 0;
         foreach ($_SESSION['carrinho'] as $variacaoId => $qtd) {
             $variacao = $this->variacaoRepo->buscarPorId($variacaoId);

@@ -85,6 +85,6 @@
     </table>
 
     <a href="/?rota=produto/form" class="btn btn-primary">+ Novo Produto</a>
-    <a href="/?rota=variacao/form" class="btn btn-secondary ms-2">+ Adicionar Variação</a>
+    <a href="/?rota=cupom/form" class="btn btn-secondary ms-2">Novo Cupom</a>
 </body>
 </html>
