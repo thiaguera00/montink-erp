@@ -7,6 +7,11 @@
 </head>
 <body class="container py-4">
    <h2>Carrinho de Compras</h2>
+   <?php if (isset($_GET['erro']) && $_GET['erro'] === 'cupom_nao_aplicavel'): ?>
+    <div class="alert alert-danger">
+        ❌ O cupom inserido não é aplicável. Verifique o valor mínimo ou a validade.
+    </div>
+<?php endif; ?>
 
     <?php if (empty($itens)): ?>
         <p class="text-muted">Seu carrinho está vazio.</p>
@@ -33,10 +38,27 @@
                 <?php endforeach; ?>
             </tbody>
             <tfoot>
+                <?php
+                    $desconto = $_SESSION['cupom']['desconto'] ?? 0;
+                    $totalComDesconto = $total - $desconto;
+                ?>
                 <tr>
                     <td colspan="4" class="text-end"><strong>Total:</strong></td>
-                    <td><strong>R$ <?= number_format($total, 2, ',', '.') ?></strong></td>
+                    <td>
+                        <?php if ($desconto > 0): ?>
+                            <span class="text-decoration-line-through text-muted">R$ <?= number_format($total, 2, ',', '.') ?></span><br>
+                            <strong>R$ <?= number_format($totalComDesconto, 2, ',', '.') ?></strong>
+                        <?php else: ?>
+                            <strong>R$ <?= number_format($total, 2, ',', '.') ?></strong>
+                        <?php endif; ?>
+                    </td>
                 </tr>
+                <?php if ($desconto > 0): ?>
+                    <tr>
+                        <td colspan="4" class="text-end text-success"><strong>Desconto:</strong></td>
+                        <td class="text-success">- R$ <?= number_format($desconto, 2, ',', '.') ?></td>
+                    </tr>
+                <?php endif; ?>
             </tfoot>
         </table>
 
@@ -47,13 +69,25 @@
                        placeholder="Digite seu CEP" value="<?= $_SESSION['cep'] ?? '' ?>" required>
             </div>
             <div class="col-auto">
-                <button type="submit" class="btn btn-primary">Calcular Frete</button>
+                <button type="submit" class="btn btn-primary">Confirmar</button>
             </div>
         </form>
 
-        <?php if (isset($_SESSION['frete'])): ?>
-            <div class="alert alert-info">
-                Frete calculado: <strong>R$ <?= number_format($_SESSION['frete'], 2, ',', '.') ?></strong>
+        <!-- Formulário para aplicar o cupom -->
+        <form action="/?rota=carrinho/aplicarCupom" method="POST" class="row g-2 mb-3">
+            <div class="col-md-4">
+                <label for="cupom" class="form-label">Cupom de Desconto</label>
+                <input type="text" name="cupom" id="cupom" class="form-control" placeholder="Digite um cupom válido">
+            </div>
+            <div class="col-auto d-flex align-items-end">
+                <button type="submit" class="btn btn-secondary">Aplicar Cupom</button>
+            </div>
+        </form>
+
+        <?php if (isset($_SESSION['cupom'])): ?>
+            <div class="alert alert-success">
+                Cupom aplicado: <strong><?= $_SESSION['cupom']['codigo'] ?></strong> - 
+                Desconto: <strong>R$ <?= number_format($_SESSION['cupom']['desconto'], 2, ',', '.') ?></strong>
             </div>
         <?php endif; ?>
 
@@ -66,7 +100,12 @@
                        value="<?= ($_SESSION['frete_info']['logradouro'] ?? '') . ' ' . ($_SESSION['frete_info']['bairro'] ?? '') ?>"
                        required>
             </div>
-
+          
+        <?php if (isset($_SESSION['frete'])): ?>
+                    <div class="alert alert-info">
+                        Frete calculado: <strong>R$ <?= number_format($_SESSION['frete'], 2, ',', '.') ?></strong>
+                    </div>
+                <?php endif; ?>
             <button type="submit" class="btn btn-success">Finalizar Pedido</button>
         </form>
     <?php endif; ?>

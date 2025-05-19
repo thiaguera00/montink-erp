@@ -11,20 +11,24 @@ require_once __DIR__ . '/models/Estoque.php';
 require_once __DIR__ . '/repository/ProdutoRepository.php';
 require_once __DIR__ . '/repository/VariacaoRepository.php';
 require_once __DIR__ . '/repository/EstoqueRepository.php';
+require_once __DIR__ . '/repository/CupomRepository.php';
 require_once __DIR__ . '/controllers/ProdutoController.php';
 require_once __DIR__ . '/controllers/VariacaoController.php';
 require_once __DIR__ . '/controllers/CepController.php';
 require_once __DIR__ . '/repository/PedidoRepository.php';
 require_once __DIR__ . '/controllers/PedidoController.php';
+require_once __DIR__ . '/controllers/CupomController.php';
 
 $produtoRepo = new ProdutoRepository($db);
 $variacaoRepo = new VariacaoRepository($db);
 $estoqueRepo = new EstoqueRepository($db);
 $pedidoRepo = new PedidoRepository($db);
+$cupomRepo = new CupomRepository($db);
 
 $produtoController = new ProdutoController($produtoRepo, $variacaoRepo, $estoqueRepo);
 $variacaoController = new VariacaoController($db);
-$pedidoController = new PedidoController($pedidoRepo, $variacaoRepo, $produtoRepo);
+$pedidoController = new PedidoController($pedidoRepo, $variacaoRepo, $produtoRepo, $cupomRepo);
+$cupomController = new CupomController($cupomRepo, $variacaoRepo, $produtoRepo);
 
 switch ($rota) {
 
@@ -123,6 +127,10 @@ switch ($rota) {
     case 'carrinho/calcularFrete':
         $controller = new CepController();
         $controller->consultarViaPost($_POST);
+    break;
+
+    case 'carrinho/aplicarCupom':
+        $cupomController->aplicarCupom($_POST['cupom'] ?? '');
     break;
     
     //Pedido
