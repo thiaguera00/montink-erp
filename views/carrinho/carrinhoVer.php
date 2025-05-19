@@ -7,11 +7,11 @@
 </head>
 <body class="container py-4">
    <h2>Carrinho de Compras</h2>
-   <?php if (isset($_GET['erro']) && $_GET['erro'] === 'cupom_nao_aplicavel'): ?>
-    <div class="alert alert-danger">
-        ❌ O cupom inserido não é aplicável. Verifique o valor mínimo ou a validade.
-    </div>
-<?php endif; ?>
+    <?php if (isset($_GET['erro']) && $_GET['erro'] === 'cupom_nao_aplicavel'): ?>
+        <div class="alert alert-danger">
+            ❌ O cupom inserido não é aplicável. Verifique o valor mínimo ou a validade.
+        </div>
+    <?php endif; ?>
 
     <?php if (empty($itens)): ?>
         <p class="text-muted">Seu carrinho está vazio.</p>
@@ -62,6 +62,7 @@
             </tfoot>
         </table>
 
+        <!-- Formulário para aplicar o CEP -->
         <form action="/?rota=carrinho/calcularFrete" method="POST" class="row g-2 mb-3 d-flex justify-content-end">
             <div class="col-auto">
                 <label for="cep" class="visually-hidden">CEP</label>
@@ -83,7 +84,6 @@
                 <button type="submit" class="btn btn-secondary">Aplicar Cupom</button>
             </div>
         </form>
-
         <?php if (isset($_SESSION['cupom'])): ?>
             <div class="alert alert-success">
                 Cupom aplicado: <strong><?= $_SESSION['cupom']['codigo'] ?></strong> - 
@@ -91,6 +91,7 @@
             </div>
         <?php endif; ?>
 
+        <!-- Formulário para finalizar pedido -->
         <form action="/?rota=pedido/finalizar" method="POST" class="mt-4">
             <input type="hidden" name="cep" value="<?= $_SESSION['cep'] ?? '' ?>">
             <div class="mb-3">
@@ -101,7 +102,7 @@
                        required>
             </div>
           
-        <?php if (isset($_SESSION['frete'])): ?>
+                <?php if (isset($_SESSION['frete'])): ?>
                     <div class="alert alert-info">
                         Frete calculado: <strong>R$ <?= number_format($_SESSION['frete'], 2, ',', '.') ?></strong>
                     </div>
