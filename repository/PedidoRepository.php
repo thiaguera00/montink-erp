@@ -1,6 +1,6 @@
 <?php
 
-require_once '../models/Pedido.php';
+require_once __DIR__ .  '/../models/Pedido.php';
 
 class PedidoRepository {
     private PDO $db;

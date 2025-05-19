@@ -59,7 +59,6 @@
 
         <form action="/?rota=pedido/finalizar" method="POST" class="mt-4">
             <input type="hidden" name="cep" value="<?= $_SESSION['cep'] ?? '' ?>">
-
             <div class="mb-3">
                 <label for="endereco" class="form-label">Endereço de Entrega</label>
                 <input type="text" name="endereco" id="endereco" class="form-control"

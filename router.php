@@ -14,13 +14,17 @@ require_once __DIR__ . '/repository/EstoqueRepository.php';
 require_once __DIR__ . '/controllers/ProdutoController.php';
 require_once __DIR__ . '/controllers/VariacaoController.php';
 require_once __DIR__ . '/controllers/CepController.php';
+require_once __DIR__ . '/repository/PedidoRepository.php';
+require_once __DIR__ . '/controllers/PedidoController.php';
 
 $produtoRepo = new ProdutoRepository($db);
 $variacaoRepo = new VariacaoRepository($db);
 $estoqueRepo = new EstoqueRepository($db);
+$pedidoRepo = new PedidoRepository($db);
 
 $produtoController = new ProdutoController($produtoRepo, $variacaoRepo, $estoqueRepo);
 $variacaoController = new VariacaoController($db);
+$pedidoController = new PedidoController($pedidoRepo, $variacaoRepo, $produtoRepo);
 
 switch ($rota) {
 
@@ -32,16 +36,16 @@ switch ($rota) {
 
     case 'produto/listar':
         $produtoController->listarComVariações();
-        break;
+    break;
 
     case 'produto/editar':
         $produtoController->buscarParaEdicao((int)$_GET['id']);
-        break;
+    break;
 
     case 'produto/atualizar':
         $produtoController->atualizarViaPost($_POST);
         header("Location: /?rota=produto/listar&sucesso=2");
-        exit;
+    exit;
 
     case 'produto/excluir':
         $produtoController->excluir((int)$_GET['id']);
@@ -50,12 +54,12 @@ switch ($rota) {
 
     case 'produto/form':
         require_once __DIR__ . '/views/produtos/produtoForm.php';
-        break;
+    break;
 
     // Variações
     case 'variacao/form':
         $variacaoController->form();
-        break;
+    break;
 
     case 'variacao/salvar':
         $variacaoController->salvarViaPost($_POST);
@@ -114,12 +118,21 @@ switch ($rota) {
         }
 
         require __DIR__ . '/views/carrinho/carrinhoVer.php';
-        break;
+    break;
 
     case 'carrinho/calcularFrete':
         $controller = new CepController();
         $controller->consultarViaPost($_POST);
-        break;
+    break;
+    
+    //Pedido
+    case 'pedido/finalizar':
+        $pedidoController->finalizar();
+    break;
+
+    case 'pedido/confirmado':
+        $pedidoController->confirmado();
+    break;
 
     default:
         http_response_code(404);
