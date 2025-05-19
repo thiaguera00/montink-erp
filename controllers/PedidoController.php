@@ -1,5 +1,6 @@
 <?php
 
+require_once __DIR__ . '/../utils/EmailService.php';
 require_once __DIR__ . '/../repository/PedidoRepository.php';
 require_once __DIR__ . '/../repository/VariacaoRepository.php';
 require_once __DIR__ . '/../repository/ProdutoRepository.php';
@@ -49,7 +50,7 @@ class PedidoController {
         }
 
         $desconto = $_SESSION['cupom']['desconto'] ?? 0;
-
+        $email = $_POST['email'];
         $cep = $_SESSION['cep'] ?? ($_POST['cep'] ?? '');
         $endereco = $_POST['endereco'] ?? ($_SESSION['frete_info']['logradouro'] ?? 'Endereço não informado');
 
@@ -62,11 +63,32 @@ class PedidoController {
         );
 
         if ($this->repo->salvar($pedido)) {
+            $itensEmail = [];
+            foreach ($_SESSION['carrinho'] as $variacaoId => $qtd) {
+                $variacao = $this->variacaoRepo->buscarPorId($variacaoId);
+                $produto = $this->produtoRepo->buscarPorId($variacao->produtoId);
+
+                $itensEmail[] = [
+                    'produto' => $produto->nome,
+                    'variacao' => $variacao->nome,
+                    'quantidade' => $qtd
+                ];
+            }
+
+            
+            EmailService::enviarPedido(
+                $email,          
+                'Cliente Montink',  
+                $endereco,               
+                $total,                  
+                $frete,                   
+                $desconto,                
+                $itensEmail 
+            );
+
             unset($_SESSION['carrinho'], $_SESSION['frete'], $_SESSION['cep'], $_SESSION['frete_info'], $_SESSION['cupom']);
             header("Location: /?rota=pedido/confirmado");
             exit;
-        } else {
-            echo "Erro ao salvar pedido.";
         }
     }
 

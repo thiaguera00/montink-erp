@@ -101,6 +101,11 @@
                        value="<?= ($_SESSION['frete_info']['logradouro'] ?? '') . ' ' . ($_SESSION['frete_info']['bairro'] ?? '') ?>"
                        required>
             </div>
+            
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" name="email" id="email" class="form-control" placeholder="Digite seu email">
+            </div>
           
                 <?php if (isset($_SESSION['frete'])): ?>
                     <div class="alert alert-info">
