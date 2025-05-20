@@ -32,6 +32,26 @@ class PedidoRepository {
         return $success;
     }
 
+    public function buscarPorId(int $id): ?Pedido {
+        $stmt = $this->db->prepare("SELECT * FROM pedidos WHERE id = ?");
+        $stmt->execute([$id]);
+        $row = $stmt->fetch();
+
+        if ($row) {
+            return new Pedido(
+                $row['total'],
+                $row['frete'],
+                $row['desconto'],
+                $row['cep_entrega'],
+                $row['endereco_entrega'],
+                $row['status'],
+                new DateTime($row['criado_em']),
+                $row['id']
+            );
+        }
+
+        return null;
+    }
     public function atualizarStatus(int $pedidoId, string $novoStatus): bool {
         $stmt = $this->db->prepare("UPDATE pedidos SET status = ? WHERE id = ?");
         return $stmt->execute([$novoStatus, $pedidoId]);

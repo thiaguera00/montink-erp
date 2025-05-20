@@ -5,6 +5,8 @@ require_once __DIR__ . '/../repository/PedidoRepository.php';
 require_once __DIR__ . '/../repository/VariacaoRepository.php';
 require_once __DIR__ . '/../repository/ProdutoRepository.php';
 require_once __DIR__ . '/../repository/CupomRepository.php';
+require_once __DIR__ . '/../repository/PedidoItemRepository.php';
+require_once __DIR__ . '/../repository/EstoqueRepository.php';
 require_once __DIR__ . '/../models/Pedido.php';
 
 class PedidoController {
@@ -12,17 +14,23 @@ class PedidoController {
     private VariacaoRepository $variacaoRepo;
     private ProdutoRepository $produtoRepo;
     private CupomRepository $cupomRepo;
+    private PedidoItemRepository $pedidoItemRepo;
+    private EstoqueRepository $estoqueRepo;
 
     public function __construct(
         PedidoRepository $repo,
         VariacaoRepository $variacaoRepo,
         ProdutoRepository $produtoRepo,
-        CupomRepository $cupomRepo
+        CupomRepository $cupomRepo,
+        PedidoItemRepository $pedidoItemRepo,
+        EstoqueRepository $estoqueRepo
     ) {
         $this->repo = $repo;
         $this->variacaoRepo = $variacaoRepo;
         $this->produtoRepo = $produtoRepo;
         $this->cupomRepo = $cupomRepo;
+        $this->pedidoItemRepo = $pedidoItemRepo;
+        $this->estoqueRepo = $estoqueRepo;
     }
 
     public function finalizar(): void {
@@ -67,6 +75,16 @@ class PedidoController {
             foreach ($_SESSION['carrinho'] as $variacaoId => $qtd) {
                 $variacao = $this->variacaoRepo->buscarPorId($variacaoId);
                 $produto = $this->produtoRepo->buscarPorId($variacao->produtoId);
+
+                $item = new PedidoItem(
+                    $pedido->id,
+                    $variacao->id,
+                    $qtd,
+                    $produto->preco
+                );
+
+                $this->pedidoItemRepo->salvar($item);
+                $this->estoqueRepo->decrementarEstoque($variacaoId, $qtd);
 
                 $itensEmail[] = [
                     'produto' => $produto->nome,

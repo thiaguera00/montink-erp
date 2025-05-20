@@ -16,19 +16,23 @@ require_once __DIR__ . '/controllers/ProdutoController.php';
 require_once __DIR__ . '/controllers/VariacaoController.php';
 require_once __DIR__ . '/controllers/CepController.php';
 require_once __DIR__ . '/repository/PedidoRepository.php';
+require_once __DIR__ . '/repository/PedidoItemRepository.php';
 require_once __DIR__ . '/controllers/PedidoController.php';
 require_once __DIR__ . '/controllers/CupomController.php';
+require_once __DIR__ . '/controllers/WebhookController.php';
 
 $produtoRepo = new ProdutoRepository($db);
 $variacaoRepo = new VariacaoRepository($db);
 $estoqueRepo = new EstoqueRepository($db);
 $pedidoRepo = new PedidoRepository($db);
+$pedidoItemRepo = new PedidoItemRepository($db);
 $cupomRepo = new CupomRepository($db);
 
 $produtoController = new ProdutoController($produtoRepo, $variacaoRepo, $estoqueRepo);
 $variacaoController = new VariacaoController($db);
-$pedidoController = new PedidoController($pedidoRepo, $variacaoRepo, $produtoRepo, $cupomRepo);
+$pedidoController = new PedidoController($pedidoRepo, $variacaoRepo, $produtoRepo, $cupomRepo, $pedidoItemRepo, $estoqueRepo);
 $cupomController = new CupomController($cupomRepo, $variacaoRepo, $produtoRepo);
+$webhookController = new WebhookController(new PedidoRepository($db));
 
 switch ($rota) {
 
@@ -153,6 +157,11 @@ switch ($rota) {
 
     case 'cupom/listar':
         $cupomController->listar();
+    break;
+    
+    //Webhook
+    case 'webhook/atualizar':
+        $webhookController->atualizarStatusViaWebhook();
     break;
 
     default:

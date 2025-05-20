@@ -104,7 +104,7 @@
             
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" name="email" id="email" class="form-control" placeholder="Digite seu email">
+                <input type="email" name="email" id="email" class="form-control" placeholder="Digite seu email" required>
             </div>
           
                 <?php if (isset($_SESSION['frete'])): ?>
