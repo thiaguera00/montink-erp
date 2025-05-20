@@ -31,7 +31,7 @@ Este projeto é uma aplicação PHP que simula um sistema de vendas com cadastro
 
 - Existe um arquivo SQL com as tabelas em database/sql/init.sql
 
-- Estou usando o mailtrap para testar o envio de email então é necessário criar uma conta e pegar as credencias 
+- Estou usando o mailtrap para testar o envio de email então é necessário criar uma conta e pegar as credenciais
 
 - Após essas configurações configure seu .env usando o .env.example
 --- 
