@@ -26,7 +26,7 @@ Este projeto é uma aplicação PHP que simula um sistema de vendas com cadastro
 
 ---
 
-## CONFIGURAR O PROJETO
+## ⚙ CONFIGURAR O PROJETO
 - Estou usando docker para rodar o banco de dados caso já tenha o MYSQL instalado não é necessário rodar o docker
 
 - Existe um arquivo SQL com as tabelas em database/sql/init.sql
