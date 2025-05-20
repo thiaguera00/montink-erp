@@ -13,27 +13,53 @@
         }
     </style>
 </head>
-<body class="container py-4">
-    <h2>Cadastrar Produto</h2>
+<body>
+<nav class="navbar navbar-expand-lg bg-light mb-4">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">
+      <img src="/public/imgs/logo-montink.png" alt="logo" height="40">
+    </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/?rota=produto/form">Adicionar Produto</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/?rota=cupom/form">Adicionar Cupom</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/?rota=produto/listar">Produtos</a>
+        </li>
+        <li class="nav-item">
+          <a class="btn btn-outline-dark ms-3" href="/?rota=carrinho/ver">🛒 Ver Carrinho</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container">
+    <h2>Cadastrar Produto</h2>
     <form action="/?rota=produto/salvar" method="POST">
         <div class="mb-3">
             <label for="nome" class="form-label">Nome do Produto</label>
             <input type="text" name="nome" class="form-control" required>
         </div>
-
+        
         <div class="mb-3">
             <label for="preco" class="form-label">Preço (R$)</label>
             <input type="number" step="0.01" name="preco" class="form-control" required>
         </div>
 
-        <hr>
-        
-
         <div>
             <button type="submit" class="btn btn-success">Salvar Produto</button>
         </div>
     </form>
+</div>
 
     <script>
         let index = 1;

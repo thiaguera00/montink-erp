@@ -5,7 +5,37 @@
     <title>Carrinho de Compras</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="container py-4">
+<body>
+<nav class="navbar navbar-expand-lg bg-light mb-4">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">
+      <img src="/public/imgs/logo-montink.png" alt="logo" height="40">
+    </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/?rota=produto/form">Adicionar Produto</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/?rota=cupom/form">Adicionar Cupom</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/?rota=produto/listar">Produtos</a>
+        </li>
+        <li class="nav-item">
+          <a class="btn btn-outline-dark ms-3" href="/?rota=carrinho/ver">🛒 Ver Carrinho</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container">
+
    <h2>Carrinho de Compras</h2>
     <?php if (isset($_GET['erro']) && $_GET['erro'] === 'cupom_nao_aplicavel'): ?>
         <div class="alert alert-danger">
@@ -24,6 +54,7 @@
                     <th>Quantidade</th>
                     <th>Preço Unitário</th>
                     <th>Subtotal</th>
+                    <th>Remover</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,6 +65,12 @@
                         <td><?= $item['quantidade'] ?></td>
                         <td>R$ <?= number_format($item['produto']->preco, 2, ',', '.') ?></td>
                         <td>R$ <?= number_format($item['subtotal'], 2, ',', '.') ?></td>
+                        <td>
+                            <form action="/?rota=carrinho/remover" method="POST" onsubmit="return confirm('Tem certeza que deseja remover este item?');">
+                                <input type="hidden" name="variacao_id" value="<?= $item['variacao']->id ?>">
+                                <button type="submit" class="btn btn-sm btn-danger">🗑️</button>
+                            </form>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -43,7 +80,7 @@
                     $totalComDesconto = $total - $desconto;
                 ?>
                 <tr>
-                    <td colspan="4" class="text-end"><strong>Total:</strong></td>
+                    <td colspan="5" class="text-end"><strong>Total:</strong></td>
                     <td>
                         <?php if ($desconto > 0): ?>
                             <span class="text-decoration-line-through text-muted">R$ <?= number_format($total, 2, ',', '.') ?></span><br>
@@ -115,5 +152,6 @@
             <button type="submit" class="btn btn-success">Finalizar Pedido</button>
         </form>
     <?php endif; ?>
+</div>
 </body>
 </html>

@@ -34,6 +34,11 @@ $pedidoController = new PedidoController($pedidoRepo, $variacaoRepo, $produtoRep
 $cupomController = new CupomController($cupomRepo, $variacaoRepo, $produtoRepo);
 $webhookController = new WebhookController(new PedidoRepository($db));
 
+if ($rota === '') {
+    header('Location: /?rota=produto/listar');
+    exit;
+}
+
 switch ($rota) {
 
     // Produtos
@@ -88,6 +93,17 @@ switch ($rota) {
         } else {
             header("Location: /?rota=produto/listar&erro=1");
         }
+        exit;
+
+    case 'carrinho/remover':
+        session_start();
+        $variacaoId = $_POST['variacao_id'] ?? null;
+        
+        if ($variacaoId && isset($_SESSION['carrinho'][$variacaoId])) {
+            unset($_SESSION['carrinho'][$variacaoId]);
+        }
+
+        header('Location: /?rota=carrinho/ver');
         exit;
 
     case 'carrinho/ver':
